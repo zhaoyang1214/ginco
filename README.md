@@ -96,16 +96,74 @@ Flags:
 ```
 
 ## 配置信息
+配置文件放在`config`目录下，支持`json, toml, yaml, yml, properties, props, prop, hcl, tfvars, dotenv, env, ini`。  
+
+项目根目录下如果存在`.env`文件，则会自动加载到配置中。同时允许配置文件使用变量，例如`${APP_NAME}`，会自动替换成`.env`文件中的`APP_NAME`值
+
+获取配置
+```shell
+// a contract.Application
+a.GetIgnore("config").(contract.Config).GetString("app.name")
+```
 
 ## 服务容器
+全局获取容器
+```shell
+a := app.Get()
+```
+
+注册服务
+```shell
+// a contract.Application
+a.Set("serverName", server)
+```
+
+获取服务
+```shell
+// a contract.Application
+configServer,err := a.Get("config")
+config := configServer.(contract.Config)
+// or
+config := a.GetIgnore("config").(contract.Config)
+```
+
+绑定Provider
+```shell
+// a contract.Application
+a.Bind("serverName", server)
+```
+
+给服务设置别名
+```shell
+// a contract.Application
+a.Alias("config", "conf")
+// 获取config服务
+conf := a.GetIgnore("conf").(contract.Config)
+```
 
 ## 服务提供者
+实现`contract.Provider`接口，然后绑定到容器`a.Bind("serverName", server)`即可
 
 ## 契约
+使用契约是为了解耦。目前约定了部分契约，后续还会增加
 
 ## 路由
+路由使用的是`gin.Engine`，只要在`router.Register`中注册相应的路由即可。
+```shell
+router := a.GetIgnore("router").(*gin.Engine)
+router.GET("/", func (c *gin.Context) {
+	c.String(http.StatusOK, "Hello Ginco v"+a.Version()+"\n")
+})
+```
+
+具体使用请参考https://github.com/gin-gonic/gin
 
 ## 中间件
+在`router.Register`中注册相应的中间件即可。
+```shell
+router := a.GetIgnore("router").(*gin.Engine)
+router.Use(gin.Logger(), gin.Recovery())
+```
 
 ## 日志
 
