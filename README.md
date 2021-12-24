@@ -44,7 +44,7 @@ Use " [command] --help" for more information about a command.
 2. 运行`go run main.go start`即可拉起HTTP服务， 请求`http://127.0.0.1:8080`即可看到输出
 `Hello Ginco v0.0.0`  
 要想进入daemon模式，可运行`go run main.go start -d`（**该模式只能运行在UNIX-based OS**）  
-使用 `go run main.go help start`可以看到其他参数
+使用 `go run main.go start -h`即可看到支持的参数
 ```shell
 Run attaches the router to a http.Server and starts listening and serving HTTP requests.
 
@@ -166,6 +166,73 @@ router.Use(gin.Logger(), gin.Recovery())
 ```
 
 ## 日志
+日志服务，基于contract.Logger契约，底层使用zap.Logger。  
+
+支持single、rotation、stderr、stack驱动。stack可以配置多个日志通道。  
+
+`rotation`驱动使用`rotatelogs.RotateLogs`包对日志切割，可以按时间（rotationTime）和日志大小（rotationSize）进行切割
+
+#### 配置项
+| 配置项 | 支持的驱动 | 备注 |
+| --- | --- | --- |
+| level | all | 日志级别 |
+| encoding | all | 日志输出格式，支持传统的console和json |
+| encoderConfig.messageKey | single、rotation、stderr |  |
+| encoderConfig.levelKey | single、rotation、stderr |  |
+| encoderConfig.timeKey | single、rotation、stderr |  |
+| encoderConfig.nameKey | single、rotation、stderr |  |
+| encoderConfig.callerKey | single、rotation、stderr |  |
+| encoderConfig.functionKey | single、rotation、stderr |  |
+| encoderConfig.stacktraceKey | single、rotation、stderr |  |
+| encoderConfig.lineEnding | single、rotation、stderr |  |
+| encoderConfig.timeEncoder | single、rotation、stderr |  |
+| encoderConfig.callerEncoder | single、rotation、stderr |  |
+| encoderConfig.consoleSeparator | single、rotation、stderr |  |
+| development | all |  |
+| disableCaller | all |  |
+| callerSkip | all |  |
+| disableStacktrace | all |  |
+| sampling.initial | all |  |
+| sampling.thereafter | all |  |
+| initialFields | all | 预定义一些值写入日志 |
+| channels | stack |  |
+| path | single、rotation | 目录支持的日期格式：%Y%m%d%H%M%S |
+| maxAge | rotation |  |
+| rotationTime | rotation |  |
+| rotationCount | rotation |  |
+| rotationSize | rotation |  |
+
+
+#### 使用
+```
+log := a.GetIgnore("log").(contract.Logger)
+defer log.Sync()
+log.Debug("test debug", map[string]string{"t1":"111"})
+log.Info("test info", zap.String("t1", "111"))
+log.Log(zap.DPanicLevel, "test log")
+log.Error("test error", map[string]string{"t1":"111"})
+```
+
 
 ## 命令行
+命令行使用cobra.Command，在console.Register注册相应的命令即可。  
+
+运行`go run main.go`即可看到所有支持的命令。
+```
+Usage:
+   [command]
+
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  help        Help about any command
+  restart     Restart http server
+  start       Start http server (alias: server)
+  stop        Stop http server
+  version     Get Application version
+
+Flags:
+  -h, --help   help for this command
+
+Use " [command] --help" for more information about a command
+```
 
