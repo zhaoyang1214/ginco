@@ -8,6 +8,8 @@ import (
 type Http struct {
 }
 
+var _ contract.Provider = (*Http)(nil)
+
 func (h *Http) Build(container contract.Container, params ...interface{}) (interface{}, error) {
 	configServer, err := container.Get("config")
 	if err != nil {

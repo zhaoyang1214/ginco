@@ -13,6 +13,8 @@ type Application struct {
 	basePath string
 }
 
+var _ contract.Application = (*Application)(nil)
+
 func NewApplication(basePath string) *Application {
 	var c = container.NewContainer()
 	a := &Application{

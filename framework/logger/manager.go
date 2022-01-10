@@ -16,6 +16,8 @@ type Manager struct {
 	channels map[string]contract.Logger
 }
 
+var _ contract.Logger = (*Manager)(nil)
+
 func NewManager(app contract.Application) *Manager {
 	return &Manager{
 		app:      app,
@@ -67,9 +69,9 @@ func (m *Manager) createCore(name string) zapcore.Core {
 	case "single":
 		core = m.createSingleCore(name)
 	case "stack":
-		core = m.createStackDriver(name)
+		core = m.createStackCore(name)
 	case "rotation":
-		core = m.createRotationDriver(name)
+		core = m.createRotationCore(name)
 	default:
 		panic("Driver [" + driver + "] is not supported")
 	}
@@ -107,7 +109,7 @@ func (m *Manager) createSingleCore(name string) zapcore.Core {
 	return zapcore.NewCore(enc, sink, level)
 }
 
-func (m *Manager) createStackDriver(name string) zapcore.Core {
+func (m *Manager) createStackCore(name string) zapcore.Core {
 	configName := m.configName(name)
 	c := m.getConfig().Sub(configName)
 	channels := c.GetStringSlice("channels")
@@ -121,7 +123,7 @@ func (m *Manager) createStackDriver(name string) zapcore.Core {
 	return zapcore.NewTee(cores...)
 }
 
-func (m *Manager) createRotationDriver(name string) zapcore.Core {
+func (m *Manager) createRotationCore(name string) zapcore.Core {
 	configName := m.configName(name)
 	enc := m.buildEncoder(configName)
 	c := m.getConfig().Sub(configName)
@@ -133,15 +135,13 @@ func (m *Manager) createRotationDriver(name string) zapcore.Core {
 
 	var opts []rotatelogs.Option
 	if c.Has("maxAge") {
-		v := c.GetInt("maxAge")
-		v *= 60 * 60 * 1000 * 1000 * 1000
-		opts = append(opts, rotatelogs.WithMaxAge(time.Duration(v)))
+		v := c.GetDuration("maxAge") * time.Hour
+		opts = append(opts, rotatelogs.WithMaxAge(v))
 	}
 
 	if c.Has("rotationTime") {
-		v := c.GetInt("rotationTime")
-		v *= 60 * 60 * 1000 * 1000 * 1000
-		opts = append(opts, rotatelogs.WithRotationTime(time.Duration(v)))
+		v := c.GetDuration("rotationTime") * time.Hour
+		opts = append(opts, rotatelogs.WithRotationTime(v))
 	}
 
 	if c.Has("rotationCount") {

@@ -8,6 +8,7 @@ import (
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/config"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/http"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/logger"
+	"github.com/zhaoyang1214/ginco/framework/foundation/providers/redis"
 )
 
 func Run(a contract.Application) error {
@@ -23,6 +24,7 @@ func registerBaseProviders(a contract.Application) {
 	a.Bind("console", &command.Command{})
 	a.Bind("http", &http.Http{})
 	a.Bind("logger", &logger.Logger{})
+	a.Bind("redis", &redis.Redis{})
 }
 
 func registerCoreAliases(a contract.Application) {

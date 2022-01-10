@@ -15,6 +15,8 @@ import (
 type Config struct {
 }
 
+var _ contract.Provider = (*Config)(nil)
+
 func (c *Config) Build(container contract.Container, params ...interface{}) (interface{}, error) {
 	conf := config.NewConfig()
 	conf.SetTypeByDefaultValue(true)

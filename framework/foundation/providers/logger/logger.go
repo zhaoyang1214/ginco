@@ -8,6 +8,8 @@ import (
 type Logger struct {
 }
 
+var _ contract.Provider = (*Logger)(nil)
+
 func (l *Logger) Build(container contract.Container, params ...interface{}) (interface{}, error) {
 	appServer, err := container.Get("app")
 	if err != nil {

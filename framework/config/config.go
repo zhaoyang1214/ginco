@@ -9,6 +9,8 @@ type Config struct {
 	viper.Viper
 }
 
+var _ contract.Config = (*Config)(nil)
+
 type DecoderConfigOption = viper.DecoderConfigOption
 
 func NewConfig() *Config {

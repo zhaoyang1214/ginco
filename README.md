@@ -11,6 +11,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现。 大部分�
 | console | cmd | 命令行服务，使用cobra.Command |
 | http | server、router | HTTP服务，底层使用gin.Engine |
 | logger | log | 日志服务，基于contract.Logger契约，底层使用zap.Logger |
+| redis | - | Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient |
 
 > 其他服务待实现，当然你也可以自己实现contract.Provider接口，然后注册服务即可
 
@@ -166,7 +167,7 @@ router.Use(gin.Logger(), gin.Recovery())
 ```
 
 ## 日志
-日志服务，基于contract.Logger契约，底层使用zap.Logger。  
+日志服务，基于contract.Logger契约，底层使用zap.Logger (go.uber.org/zap)。  
 
 支持single、rotation、stderr、stack驱动。stack可以配置多个日志通道。  
 
@@ -207,10 +208,15 @@ router.Use(gin.Logger(), gin.Recovery())
 ```
 log := a.GetIgnore("log").(contract.Logger)
 defer log.Sync()
+
 log.Debug("test debug", map[string]string{"t1":"111"})
+
 log.Info("test info", zap.String("t1", "111"))
+
 log.Log(zap.DPanicLevel, "test log")
+
 log.Error("test error", map[string]string{"t1":"111"})
+
 ```
 
 
@@ -235,4 +241,66 @@ Flags:
 
 Use " [command] --help" for more information about a command
 ```
+
+## Redis
+Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient（github.com/go-redis/redis/v8）。  
+
+支持**单机**、**集群**、**哨兵**三种模式，根据配置文件中的配置项决定：
+
+1. 如果配置了`master_name`，则是**哨兵**模式
+2. 如果`addrs`配置了两个及以上地址，则是**集群**模式
+3. 其他情况，则是**单机**模式
+
+使用：
+```
+redisClient := a.GetIgnore("redis").(contract.Redis)
+ctx := context.Background()
+
+// 默认使用`default`配置
+err := redisClient.Set(ctx, "test", "111", 0).Err()
+if err != nil {
+    panic(err)
+}
+
+fmt.Println(redisClient.Get(ctx, "test"))
+
+// 使用其他`redis`配置（需在`config/redis.yaml`文件中配置）
+r := redisClient.Connection("other_redis")
+err := r.Set(ctx, "test1", "ttt", 60 * time.Second).Err()
+if err != nil {
+    panic(err)
+}
+
+fmt.Println(r.Get(ctx, "test1"))
+
+```
+
+#### 配置项
+| 配置项 | 支持的模式 | 备注 |
+| --- | --- | --- |
+| addrs | all | host:port |
+| db | 单机、哨兵 |  |
+| password | all |  |
+| username | all | Redis >= 6.0版本支持 |
+| max_retries | all | Maximum number of retries before giving up.Default is 3 retries; -1 (not 0) disables retries. |
+| min_retry_backoff | all | Minimum backoff between each retry.Default is 8 milliseconds; -1 disables backoff. |
+| max_retry_backoff | all | Maximum backoff between each retry.Default is 512 milliseconds; -1 disables backoff. |
+| dial_timeout | all | Dial timeout for establishing new connections.Default is 5 seconds. |
+| read_timeout | all | Timeout for socket reads. If reached, commands will fail with a timeout instead of blocking. Use value -1 for no timeout and 0 for default.Default is 3 seconds. |
+| write_timeout | all | Timeout for socket writes. If reached, commands will fail with a timeout instead of blocking.Default is ReadTimeout. |
+| pool_fifo | all | Type of connection pool.true for FIFO pool, false for LIFO pool.Note that fifo has higher overhead compared to lifo. |
+| pool_size | all | Maximum number of socket connections. Default is 10 connections per every available CPU as reported by runtime.GOMAXPROCS.|
+| min_idle_conns | all | Minimum number of idle connections which is useful when establishing new connection is slow. |
+| max_conn_age | all | Connection age at which client retires (closes) the connection.Default is to not close aged connections. |
+| pool_timeout | all | Amount of time client waits for connection if all connections are busy before returning an error.Default is ReadTimeout + 1 second. |
+| idle_timeout | all | Amount of time after which client closes idle connections.Should be less than server's timeout.Default is 5 minutes. -1 disables idle timeout check. |
+| idle_check_frequency | all | Frequency of idle checks made by idle connections reaper.Default is 1 minute. -1 disables idle connections reaper,but idle connections are still discarded by the client if IdleTimeout is set. |
+| max_redirects | 集群 | The maximum number of retries before giving up. Command is retried on network errors and MOVED/ASK redirects. |
+| read_only | 集群 | Enables read-only commands on slave nodes. |
+| route_by_latency | 集群 | Allows routing read-only commands to the closest master or slave node.It automatically enables ReadOnly. |
+| route_randomly | 集群 | Allows routing read-only commands to the random master or slave node.It automatically enables ReadOnly. |
+| master_name | 哨兵 | The master name. |
+| sentinel_password | 哨兵 | Sentinel password from "requirepass <password>" (if enabled) in Sentinel configuration, or, if SentinelUsername is also supplied, used for ACL-based authentication. |
+
+
 

@@ -11,6 +11,8 @@ type Container struct {
 	aliases   map[string]string
 }
 
+var _ contract.Container = (*Container)(nil)
+
 func NewContainer() *Container {
 	return &Container{
 		instances: make(map[string]interface{}),

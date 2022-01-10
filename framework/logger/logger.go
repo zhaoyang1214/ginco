@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"github.com/zhaoyang1214/ginco/framework/contract"
 	"go.uber.org/zap"
 	"strconv"
 )
@@ -8,6 +9,8 @@ import (
 type Logger struct {
 	*zap.Logger
 }
+
+var _ contract.Logger = (*Logger)(nil)
 
 func (l *Logger) convert(context ...interface{}) []zap.Field {
 	fields := make([]zap.Field, len(context))
