@@ -1,0 +1,35 @@
+database:
+  default: mysql2
+  connections:
+    mysql:
+      driver: mysql
+      dsn: "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+      conn_max_idle_time: 1 # 1 hour
+      conn_max_lifetime: 24 # 24 hour
+      max_idle_conns: 100
+      max_open_conns: 200
+    mysql2:
+      driver: mysql
+      conn_max_idle_time: 1 # 1 hour
+      conn_max_lifetime: 24 # 24 hour
+      max_idle_conns: 100
+      max_open_conns: 200
+      write:
+        -
+          dsn: "user:pass@tcp(127.0.0.1:3306)/dbname1?charset=utf8mb4&parseTime=True&loc=Local"
+        -
+          dsn: "user:pass@tcp(127.0.0.1:3306)/dbname2?charset=utf8mb4&parseTime=True&loc=Local"
+      read:
+        -
+          dsn: "user:pass@tcp(127.0.0.1:3306)/dbname3?charset=utf8mb4&parseTime=True&loc=Local"
+        -
+          dsn: "user:pass@tcp(127.0.0.1:3306)/dbname4?charset=utf8mb4&parseTime=True&loc=Local"
+    sqlite:
+      driver: sqlite
+      dsn:
+    sqlserver:
+      driver: sqlserver
+      dsn:
+    postgres:
+      driver: postgres
+      dsn:

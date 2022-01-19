@@ -73,7 +73,7 @@ func (m *Manager) createCore(name string) zapcore.Core {
 	case "rotation":
 		core = m.createRotationCore(name)
 	default:
-		panic("Driver [" + driver + "] is not supported")
+		panic("Logger driver [" + driver + "] is not supported")
 	}
 	return core
 }

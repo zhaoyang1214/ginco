@@ -21,13 +21,14 @@ func NewRedis(app contract.Application) *Redis {
 		app:     app,
 		clients: make(map[string]Client),
 	}
-	r.Client = r.Connection("")
+	r.Client = r.Connection()
 	return r
 }
 
-func (r *Redis) Connection(name string) Client {
-	if name == "" {
-		name = "default"
+func (r *Redis) Connection(names ...string) Client {
+	name := "default"
+	if len(names) > 0 {
+		name = names[0]
 	}
 	if c, ok := r.clients[name]; ok {
 		return c

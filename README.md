@@ -1,7 +1,7 @@
 # Ginco
 
 ## 介绍
-Ginco是一个Golang框架，基于gin框架和cobra CLI库实现。 大部分服务基于契约，均可替换。
+Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用。大部分服务基于契约，均可替换。
 
 ##### 目前实现的服务：
 
@@ -13,7 +13,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现。 大部分�
 | logger | log | 日志服务，基于contract.Logger契约，底层使用zap.Logger |
 | redis | - | Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient |
 
-> 其他服务待实现，当然你也可以自己实现contract.Provider接口，然后注册服务即可
+> 其他服务待实现，当然你也可以自己直接注册服务（Set），或者实现contract.Provider接口，然后绑定（Bind）即可
 
 
 ## 安装

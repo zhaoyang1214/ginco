@@ -8,4 +8,7 @@ type Container interface {
 	Bind(name string, provider Provider)
 	GetNameByAlias(alias string) string
 	Alias(name, alias string)
+	HasInstance(name string) bool
+	HasAlias(name string) bool
+	HasProvider(name string) bool
 }

@@ -50,13 +50,13 @@ func (c *Container) Make(name string, params ...interface{}) (interface{}, error
 }
 
 func (c *Container) Has(name string) bool {
-	if _, ok := c.aliases[name]; ok {
+	if c.HasInstance(name) {
 		return true
 	}
-	if _, ok := c.instances[name]; ok {
+	if c.HasProvider(name) {
 		return true
 	}
-	if _, ok := c.providers[name]; ok {
+	if c.HasAlias(name) {
 		return true
 	}
 	return false
@@ -86,4 +86,33 @@ func (c *Container) Alias(name, alias string) {
 		panic(errors.New(name + " is aliased to itself."))
 	}
 	c.aliases[alias] = name
+}
+
+func (c *Container) HasInstance(name string) bool {
+	if _, ok := c.instances[name]; ok {
+		return true
+	}
+	return false
+}
+
+func (c *Container) HasAlias(alias string) bool {
+	if _, ok := c.aliases[alias]; ok {
+		return true
+	}
+	return false
+}
+
+func (c *Container) HasProvider(name string) bool {
+	if _, ok := c.providers[name]; ok {
+		return true
+	}
+	return false
+}
+
+func (c *Container) ForgetInstances() {
+	c.instances = make(map[string]interface{})
+}
+
+func (c *Container) ForgetInstance(name string) {
+	delete(c.instances, name)
 }

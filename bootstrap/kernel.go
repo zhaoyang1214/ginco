@@ -6,6 +6,7 @@ import (
 	"github.com/zhaoyang1214/ginco/framework/foundation/commands"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/command"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/config"
+	"github.com/zhaoyang1214/ginco/framework/foundation/providers/database"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/http"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/logger"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/redis"
@@ -25,6 +26,7 @@ func registerBaseProviders(a contract.Application) {
 	a.Bind("http", &http.Http{})
 	a.Bind("logger", &logger.Logger{})
 	a.Bind("redis", &redis.Redis{})
+	a.Bind("database", &database.Database{})
 }
 
 func registerCoreAliases(a contract.Application) {
@@ -33,6 +35,7 @@ func registerCoreAliases(a contract.Application) {
 		"server": "http",
 		"router": "http",
 		"log":    "logger",
+		"db":     "database",
 	}
 	for k, v := range aliases {
 		a.Alias(v, k)
