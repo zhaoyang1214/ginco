@@ -3,6 +3,9 @@ package database
 import (
 	"github.com/zhaoyang1214/ginco/framework/contract"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
 	"time"
@@ -22,7 +25,10 @@ func NewDatabase(app contract.Application) *Database {
 		connections: make(map[string]*gorm.DB),
 	}
 	defaultName := app.GetIgnore("config").(contract.Config).GetString("database.default")
-	db.DB = db.Connection(defaultName)
+	if defaultName != "" {
+		db.DB = db.Connection(defaultName)
+	}
+
 	return db
 }
 
@@ -47,22 +53,21 @@ func (db *Database) Resolve(name string) *gorm.DB {
 	driver := conf.GetString("driver")
 	switch driver {
 	case "mysql":
-		connection = db.resolveMysql(conf)
+		connection = db.resolve(conf, mysql.Open)
 	case "sqlite":
-		connection = db.resolveSqlite(conf)
+		connection = db.resolve(conf, sqlite.Open)
 	case "sqlserver":
-		connection = db.resolveSqlserver(conf)
+		connection = db.resolve(conf, sqlserver.Open)
 	case "postgres":
-		connection = db.resolvePostgres(conf)
+		connection = db.resolve(conf, postgres.Open)
 	default:
 		panic("Database driver [" + driver + "] is not supported")
-
 	}
 
 	return connection
 }
 
-func (db *Database) resolveMysql(conf contract.Config) *gorm.DB {
+func (db *Database) resolve(conf contract.Config, dbOpenFun func(dsn string) gorm.Dialector) *gorm.DB {
 	var dsn string
 	var sources, replicas []gorm.Dialector
 	if conf.Has("dsn") {
@@ -74,24 +79,19 @@ func (db *Database) resolveMysql(conf contract.Config) *gorm.DB {
 			if i == 0 {
 				dsn = v["dsn"].(string)
 			}
-			sources = append(sources, mysql.Open(v["dsn"].(string)))
+			sources = append(sources, dbOpenFun(v["dsn"].(string)))
 		}
 
 		readConf := conf.Get("read").([]interface{})
 		for _, value := range readConf {
 			v := value.(map[interface{}]interface{})
-			replicas = append(replicas, mysql.Open(v["dsn"].(string)))
+			replicas = append(replicas, dbOpenFun(v["dsn"].(string)))
 		}
 	} else {
 		panic("Database dsn is not found")
 	}
 
-	mysqlConfig := mysql.Config{
-		DSN: dsn,
-	}
-	// TODO 后续版本支持其他参数
-
-	conn, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{})
+	conn, err := gorm.Open(dbOpenFun(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -146,16 +146,4 @@ func (db *Database) resolveMysql(conf contract.Config) *gorm.DB {
 	}
 
 	return conn
-}
-
-func (db *Database) resolveSqlite(conf contract.Config) *gorm.DB {
-	return nil
-}
-
-func (db *Database) resolveSqlserver(conf contract.Config) *gorm.DB {
-	return nil
-}
-
-func (db *Database) resolvePostgres(conf contract.Config) *gorm.DB {
-	return nil
 }

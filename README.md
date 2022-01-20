@@ -12,6 +12,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 | http | server、router | HTTP服务，底层使用gin.Engine |
 | logger | log | 日志服务，基于contract.Logger契约，底层使用zap.Logger |
 | redis | - | Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient |
+| database | db | 数据库服务，基于contract.Database契约，底层使用gorm.DB |
 
 > 其他服务待实现，当然你也可以自己直接注册服务（Set），或者实现contract.Provider接口，然后绑定（Bind）即可
 
@@ -251,7 +252,7 @@ Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient（g
 2. 如果`addrs`配置了两个及以上地址，则是**集群**模式
 3. 其他情况，则是**单机**模式
 
-使用：
+#### 使用：
 ```
 redisClient := a.GetIgnore("redis").(contract.Redis)
 ctx := context.Background()
@@ -301,6 +302,64 @@ fmt.Println(r.Get(ctx, "test1"))
 | route_randomly | 集群 | Allows routing read-only commands to the random master or slave node.It automatically enables ReadOnly. |
 | master_name | 哨兵 | The master name. |
 | sentinel_password | 哨兵 | Sentinel password from "requirepass <password>" (if enabled) in Sentinel configuration, or, if SentinelUsername is also supplied, used for ACL-based authentication. |
+
+
+## 数据库
+数据库使用的是`gorm.io/gorm`库，GORM 官方支持的数据库类型有： MySQL, PostgreSQL, SQlite, SQL Server。  
+同时，GORM 使用 `database/sql` 维护连接池
+
+#### 使用：
+```
+import (
+    "fmt"
+    "github.com/spf13/cobra"
+    "github.com/zhaoyang1214/ginco/framework/contract"
+    "github.com/zhaoyang1214/ginco/framework/database"
+)
+
+// 表名为users
+type User struct {
+    ID           uint
+    Name         string
+}
+
+
+// 使用默认连接，database.yaml文件中配置默认连接名（database.default）
+defaultDb := a.GetIgnore("db").(*database.Database)
+user := User{}
+defaultDb.First(&user)
+fmt.Printf("%+v\n", user)
+
+// 使用指定连接 - mysql2
+dbCon := a.GetIgnore("db").(contract.Database).Connection("mysql2")
+user2 := User{}
+dbCon.First(&user2)
+fmt.Printf("%+v\n", user2)
+
+// 使用指定连接 - sqlite
+sqliteDb := a.GetIgnore("db").(contract.Database).Connection("sqlite")
+sqliteDb.Exec("DROP TABLE IF EXISTS `users`;CREATE TABLE `users` (`id` INTEGER, name TEXT, PRIMARY KEY(id));")
+sqliteDb.Create(&User{
+    Name: "test2",
+})
+user3 := User{}
+sqliteDb.First(&user3)
+fmt.Printf("%+v\n", user3)
+```
+
+#### 配置：
+| 配置项 | 说明 |
+| --- | --- |
+| driver | 数据库驱动，支持mysql、sqlite、sqlserver、postgres |
+| dsn | 数据库连接地址，当为单机时候配置 |
+| write.*.dsn | 数据库写连接地址，当需要读写分离的时候配置，支持多读多写 |
+| read.*.dsn | 数据库读连接地址，当需要读写分离的时候配置，支持多读多写 |
+| conn_max_idle_time | 连接空闲的最大时间，单位小时 |
+| conn_max_lifetime | 连接可复用的最大时间，单位小时 |
+| max_idle_conns | 空闲连接池中连接的最大数量 |
+| max_open_conns | 打开数据库连接的最大数量 |
+
+
 
 
 
