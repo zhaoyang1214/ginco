@@ -1,5 +1,5 @@
 database:
-  default: sqlite
+  default: mysql
   connections:
     mysql:
       driver: mysql
@@ -24,7 +24,7 @@ database:
           dsn: "user:pass@tcp(127.0.0.1:3306)/dbname3?charset=utf8mb4&parseTime=True&loc=Local"
     sqlite:
       driver: sqlite
-      dsn: "./runtime/test.db"
+      dsn: "./runtime/database/ginco.db"
       conn_max_idle_time: 1 # 1 hour
       conn_max_lifetime: 24 # 24 hour
       max_idle_conns: 100

@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/zhaoyang1214/ginco/framework/contract"
 	"github.com/zhaoyang1214/ginco/framework/foundation/commands"
+	"github.com/zhaoyang1214/ginco/framework/foundation/providers/cache"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/command"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/config"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/database"
@@ -27,6 +28,7 @@ func registerBaseProviders(a contract.Application) {
 	a.Bind("logger", &logger.Logger{})
 	a.Bind("redis", &redis.Redis{})
 	a.Bind("database", &database.Database{})
+	a.Bind("cache", &cache.Cache{})
 }
 
 func registerCoreAliases(a contract.Application) {

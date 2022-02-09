@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/allegro/bigcache v1.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denisenkom/go-mssqldb v0.11.0 // indirect

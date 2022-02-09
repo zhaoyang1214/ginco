@@ -13,6 +13,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 | logger | log | 日志服务，基于contract.Logger契约，底层使用zap.Logger |
 | redis | - | Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient |
 | database | db | 数据库服务，基于contract.Database契约，底层使用gorm.DB |
+| cache | - | 缓存服务，基于contract.Cache契约，支持redis、memory、database三种驱动 |
 
 > 其他服务待实现，当然你也可以自己直接注册服务（Set），或者实现contract.Provider接口，然后绑定（Bind）即可
 
@@ -360,6 +361,40 @@ fmt.Printf("%+v\n", user3)
 | max_open_conns | 打开数据库连接的最大数量 |
 
 
+ ## 缓存
+缓存目前支持`redis`、`database`、`memory`三种驱动，其中`redis`、`database`分别基于ginco框架的`redis`和`database`服务，`memory`基于`bigcache`包。   
+
+#### 使用
+```
+c := a.GetIgnore("cache").(contract.Cache)
+ctx := context.Background()
+			
+// 设置缓存
+_ = c.Set(ctx, "test2", []byte("2222"), time.Minute)
+
+// 获取缓存
+v, err := c.Get(ctx, "test2")
+fmt.Println(err)
+if err != nil {
+    fmt.Println(string(v))
+}
+
+// 删除缓存
+_ = c.Delete(ctx, "test1", "test2")
+
+// 判断缓存是否存在
+c.Has(ctx, "test")
+
+// 根据前缀清除缓存
+_ = c.ClearPrefix(ctx, "te")
+
+// 清空缓存
+_ = c.Clear(ctx)
+```
+
+> 备注： database驱动需要创建缓存表，表名可配，表中需有key(string)、value(string)、expiration(time.Time)三个字段。
 
 
+
+待更。。。
 
