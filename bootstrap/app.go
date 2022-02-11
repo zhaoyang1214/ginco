@@ -5,7 +5,6 @@ import (
 	"github.com/zhaoyang1214/ginco/app/providers"
 	"github.com/zhaoyang1214/ginco/framework/contract"
 	"github.com/zhaoyang1214/ginco/framework/foundation"
-	"github.com/zhaoyang1214/ginco/router"
 	"os"
 )
 
@@ -21,7 +20,6 @@ func InitApp() contract.Application {
 	registerCoreAliases(app)
 	registerConfigAliases(app)
 	registerBaseCommands(app)
-	router.Register(app)
 	console.Register(app)
 	return app
 }

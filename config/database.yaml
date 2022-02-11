@@ -3,7 +3,7 @@ database:
   connections:
     mysql:
       driver: mysql
-      dsn: "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+      dsn: ${MYSQL_DSN}
       conn_max_idle_time: 1 # 1 hour
       conn_max_lifetime: 24 # 24 hour
       max_idle_conns: 100

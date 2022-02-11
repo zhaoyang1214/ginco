@@ -6,6 +6,7 @@ import (
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
 	"github.com/zhaoyang1214/ginco/framework/contract"
+	"github.com/zhaoyang1214/ginco/router"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -31,11 +32,12 @@ func HttpCommand(a contract.Application) *cobra.Command {
 		Short:   "Start http server (alias: server)",
 		Long:    "Run attaches the router to a http.Server and starts listening and serving HTTP requests.",
 		Run: func(cmd *cobra.Command, args []string) {
+			router.Register(a)
 			routerServer, err := a.Get("router")
 			if err != nil {
 				panic(err)
 			}
-			router := routerServer.(*gin.Engine)
+			r := routerServer.(*gin.Engine)
 			portStr := strconv.Itoa(port)
 			if isDaemon {
 				pidFile := filepath.Join(a.RuntimePath(), "ginco-"+portStr+".pid")
@@ -67,7 +69,7 @@ func HttpCommand(a contract.Application) *cobra.Command {
 					return
 				}
 				defer context.Release()
-				if err := router.Run(":" + portStr); err != nil {
+				if err := r.Run(":" + portStr); err != nil {
 					panic(err)
 				} else {
 					fmt.Println("http started")
@@ -75,7 +77,7 @@ func HttpCommand(a contract.Application) *cobra.Command {
 				return
 			}
 
-			if err := router.Run(":" + portStr); err != nil {
+			if err := r.Run(":" + portStr); err != nil {
 				panic(err)
 			}
 		},

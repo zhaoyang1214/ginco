@@ -24,18 +24,16 @@ func NewDatabase(app contract.Application) *Database {
 		app:         app,
 		connections: make(map[string]*gorm.DB),
 	}
-	defaultName := app.GetIgnore("config").(contract.Config).GetString("database.default")
-	if defaultName != "" {
-		db.DB = db.Connection(defaultName)
-	}
-
+	db.DB = db.Connection()
 	return db
 }
 
 func (db *Database) Connection(names ...string) *gorm.DB {
-	name := "mysql"
+	var name string
 	if len(names) > 0 {
 		name = names[0]
+	} else {
+		name = db.app.GetIgnore("config").(contract.Config).GetString("database.default")
 	}
 	if c, ok := db.connections[name]; ok {
 		return c

@@ -65,14 +65,25 @@ func (c *Config) Build(container contract.Container, params ...interface{}) (int
 			value := conf.GetString(key)
 			if strings.HasPrefix(value, "${") && strings.HasSuffix(value, "}") {
 				envKey := strings.Trim(value, "${}")
-				v := conf.Get(envKey)
+				/*v := conf.Get(envKey)
 				if v == nil {
 					return nil, errors.New("Env Key not found:" + envKey)
+				}*/
+				newCfg := generateMap(strings.Split(key, "."), conf.GetString(envKey))
+				if err = conf.MergeConfigMap(newCfg); err != nil {
+					return nil, err
 				}
-				conf.Set(key, v)
 			}
 		}
 	}
 
 	return conf, nil
+}
+
+func generateMap(keys []string, value interface{}) map[string]interface{} {
+	if len(keys) == 1 {
+		return map[string]interface{}{keys[0]: value}
+	}
+	v := generateMap(keys[1:], value)
+	return map[string]interface{}{keys[0]: v}
 }

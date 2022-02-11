@@ -1,4 +1,3 @@
 http:
-  #mode: debug
-  mode: release
+  mode: debug
   port: 8080
