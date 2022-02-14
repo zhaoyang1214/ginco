@@ -22,3 +22,20 @@ func Name(app contract.Application) func(*gin.Context) {
 		c.String(http.StatusOK, "My name is "+app.GetIgnore("config").(contract.Config).GetString("app.name")+"\n")
 	}
 }
+
+// Hello World
+// @Summary test
+// @Schemes
+// @Description test
+// @Tags
+// @Accept json
+// @Produce json
+// @Success 200 {object} entity.JSONResult{code=int,message=string,data=string} "helloworld"
+// @Router /helloworld [get]
+func Helloworld(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"code":    0,
+		"message": "OK",
+		"data":    "Hello World",
+	})
+}
