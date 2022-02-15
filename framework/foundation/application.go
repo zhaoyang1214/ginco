@@ -45,7 +45,7 @@ func (a *Application) RuntimePath() string {
 	return a.BasePath("runtime")
 }
 
-func (a *Application) GetIgnore(name string) interface{} {
+func (a *Application) GetI(name string) interface{} {
 	s, _ := a.Get(name)
 	return s
 }

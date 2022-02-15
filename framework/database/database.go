@@ -33,7 +33,7 @@ func (db *Database) Connection(names ...string) *gorm.DB {
 	if len(names) > 0 {
 		name = names[0]
 	} else {
-		name = db.app.GetIgnore("config").(contract.Config).GetString("database.default")
+		name = db.app.GetI("config").(contract.Config).GetString("database.default")
 	}
 	if c, ok := db.connections[name]; ok {
 		return c
@@ -43,7 +43,7 @@ func (db *Database) Connection(names ...string) *gorm.DB {
 }
 
 func (db *Database) Resolve(name string) *gorm.DB {
-	conf := db.app.GetIgnore("config").(contract.Config).Sub("database.connections." + name)
+	conf := db.app.GetI("config").(contract.Config).Sub("database.connections." + name)
 	if conf == nil {
 		panic("Database config [" + name + "] is not defined")
 	}

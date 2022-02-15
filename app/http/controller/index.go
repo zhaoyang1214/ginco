@@ -19,7 +19,7 @@ func Name(app contract.Application) func(*gin.Context) {
 			c.String(http.StatusOK, "Hello userid %d username %s ", user.ID, user.Name)
 			return
 		}
-		c.String(http.StatusOK, "My name is "+app.GetIgnore("config").(contract.Config).GetString("app.name")+"\n")
+		c.String(http.StatusOK, "My name is "+app.GetI("config").(contract.Config).GetString("app.name")+"\n")
 	}
 }
 

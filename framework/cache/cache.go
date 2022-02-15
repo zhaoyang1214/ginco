@@ -26,7 +26,7 @@ func NewCache(app contract.Application) *Cache {
 func (c *Cache) Driver(driver ...string) contract.Cache {
 	var name string
 	if len(driver) == 0 {
-		name = c.app.GetIgnore("config").(contract.Config).GetString("cache.default")
+		name = c.app.GetI("config").(contract.Config).GetString("cache.default")
 	} else {
 		name = driver[0]
 	}
@@ -42,7 +42,7 @@ func (c *Cache) Register(driver string, cache contract.Cache) {
 }
 
 func (c *Cache) resolve(name string) contract.Cache {
-	cacheConf := c.app.GetIgnore("config").(contract.Config).Sub("cache")
+	cacheConf := c.app.GetI("config").(contract.Config).Sub("cache")
 	storeConf := cacheConf.Sub("stores." + name)
 	if storeConf == nil {
 		panic("Cache config [" + name + "] is not defined")
@@ -65,7 +65,7 @@ func (c *Cache) resolve(name string) contract.Cache {
 }
 
 func (c *Cache) createRedisDriver(connection, prefix string) contract.Cache {
-	return NewRedisDriver(c.app.GetIgnore("redis").(contract.Redis).Connection(connection), prefix)
+	return NewRedisDriver(c.app.GetI("redis").(contract.Redis).Connection(connection), prefix)
 }
 
 func (c *Cache) createDatabaseDriver(connection, table, prefix string) contract.Cache {
@@ -73,7 +73,7 @@ func (c *Cache) createDatabaseDriver(connection, table, prefix string) contract.
 	if connection != "" {
 		conn = append(conn, connection)
 	}
-	return NewDatabaseDriver(c.app.GetIgnore("db").(contract.Database).Connection(conn...), table, prefix)
+	return NewDatabaseDriver(c.app.GetI("db").(contract.Database).Connection(conn...), table, prefix)
 }
 
 func (c *Cache) createBigcacheDriver(prefix string, conf contract.Config) contract.Cache {

@@ -13,8 +13,8 @@ import (
 )
 
 func JWT(app contract.Application) *jwt.GinJWTMiddleware {
-	jwtConf := app.GetIgnore("config").(contract.Config).Sub("jwt")
-	log := app.GetIgnore("log").(contract.Logger)
+	jwtConf := app.GetI("config").(contract.Config).Sub("jwt")
+	log := app.GetI("log").(contract.Logger)
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:            "zone",
@@ -28,7 +28,7 @@ func JWT(app contract.Application) *jwt.GinJWTMiddleware {
 				return nil, jwt.ErrMissingLoginValues
 			}
 			var user model.User
-			db := app.GetIgnore("db").(*database.Database)
+			db := app.GetI("db").(*database.Database)
 			if err := db.First(&user, "email = ?", loginVals.Email).Error; err != nil {
 				return nil, errors.New("用户email不存在")
 			}
@@ -55,7 +55,7 @@ func JWT(app contract.Application) *jwt.GinJWTMiddleware {
 				return false
 			}
 			var user model.User
-			db := app.GetIgnore("db").(*database.Database)
+			db := app.GetI("db").(*database.Database)
 			if err := db.First(&user, data).Error; err != nil {
 				return false
 			}

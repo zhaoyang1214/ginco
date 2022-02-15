@@ -5,5 +5,5 @@ type Application interface {
 	Version() string
 	BasePath(path string) string
 	RuntimePath() string
-	GetIgnore(name string) interface{}
+	GetI(name string) interface{}
 }

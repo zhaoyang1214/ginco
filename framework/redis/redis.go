@@ -38,7 +38,7 @@ func (r *Redis) Connection(names ...string) Client {
 }
 
 func (r *Redis) Resolve(name string) Client {
-	conf := r.app.GetIgnore("config").(contract.Config).Sub("redis." + name)
+	conf := r.app.GetI("config").(contract.Config).Sub("redis." + name)
 	if conf == nil {
 		panic("Redis config [" + name + "] is not defined")
 	}

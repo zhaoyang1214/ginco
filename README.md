@@ -14,6 +14,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 | redis | - | Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient |
 | database | db | 数据库服务，基于contract.Database契约，底层使用gorm.DB |
 | cache | - | 缓存服务，基于contract.Cache契约，支持redis、memory、database三种驱动 |
+| validate | validator | 数据验证服务，使用validator.Validate |
 
 > 其他服务待实现，当然你也可以自己直接注册服务（Set），或者实现contract.Provider接口，然后绑定（Bind）即可
 
@@ -106,7 +107,7 @@ Flags:
 获取配置
 ```shell
 // a contract.Application
-a.GetIgnore("config").(contract.Config).GetString("app.name")
+a.GetI("config").(contract.Config).GetString("app.name")
 ```
 
 ## 服务容器
@@ -127,7 +128,7 @@ a.Set("serverName", server)
 configServer,err := a.Get("config")
 config := configServer.(contract.Config)
 // or
-config := a.GetIgnore("config").(contract.Config)
+config := a.GetI("config").(contract.Config)
 ```
 
 绑定Provider
@@ -141,7 +142,7 @@ a.Bind("serverName", server)
 // a contract.Application
 a.Alias("config", "conf")
 // 获取config服务
-conf := a.GetIgnore("conf").(contract.Config)
+conf := a.GetI("conf").(contract.Config)
 ```
 
 ## 服务提供者
@@ -153,7 +154,7 @@ conf := a.GetIgnore("conf").(contract.Config)
 ## 路由
 路由使用的是`gin.Engine`，只要在`router.Register`中注册相应的路由即可。
 ```shell
-router := a.GetIgnore("router").(*gin.Engine)
+router := a.GetI("router").(*gin.Engine)
 router.GET("/", func (c *gin.Context) {
 	c.String(http.StatusOK, "Hello Ginco v"+a.Version()+"\n")
 })
@@ -164,7 +165,7 @@ router.GET("/", func (c *gin.Context) {
 ## 中间件
 在`router.Register`中注册相应的中间件即可。
 ```shell
-router := a.GetIgnore("router").(*gin.Engine)
+router := a.GetI("router").(*gin.Engine)
 router.Use(gin.Logger(), gin.Recovery())
 ```
 
@@ -208,7 +209,7 @@ router.Use(gin.Logger(), gin.Recovery())
 
 #### 使用
 ```
-log := a.GetIgnore("log").(contract.Logger)
+log := a.GetI("log").(contract.Logger)
 defer log.Sync()
 
 log.Debug("test debug", map[string]string{"t1":"111"})
@@ -255,7 +256,7 @@ Redis服务，基于contract.Redis契约，底层使用redis.UniversalClient（g
 
 #### 使用：
 ```
-redisClient := a.GetIgnore("redis").(contract.Redis)
+redisClient := a.GetI("redis").(contract.Redis)
 ctx := context.Background()
 
 // 默认使用`default`配置
@@ -326,19 +327,19 @@ type User struct {
 
 
 // 使用默认连接，database.yaml文件中配置默认连接名（database.default）
-defaultDb := a.GetIgnore("db").(*database.Database)
+defaultDb := a.GetI("db").(*database.Database)
 user := User{}
 defaultDb.First(&user)
 fmt.Printf("%+v\n", user)
 
 // 使用指定连接 - mysql2
-dbCon := a.GetIgnore("db").(contract.Database).Connection("mysql2")
+dbCon := a.GetI("db").(contract.Database).Connection("mysql2")
 user2 := User{}
 dbCon.First(&user2)
 fmt.Printf("%+v\n", user2)
 
 // 使用指定连接 - sqlite
-sqliteDb := a.GetIgnore("db").(contract.Database).Connection("sqlite")
+sqliteDb := a.GetI("db").(contract.Database).Connection("sqlite")
 sqliteDb.Exec("DROP TABLE IF EXISTS `users`;CREATE TABLE `users` (`id` INTEGER, name TEXT, PRIMARY KEY(id));")
 sqliteDb.Create(&User{
     Name: "test2",
@@ -366,7 +367,7 @@ fmt.Printf("%+v\n", user3)
 
 #### 使用
 ```
-c := a.GetIgnore("cache").(contract.Cache)
+c := a.GetI("cache").(contract.Cache)
 ctx := context.Background()
 			
 // 设置缓存
@@ -394,7 +395,28 @@ _ = c.Clear(ctx)
 
 > 备注： database驱动需要创建缓存表，表名可配，表中需有key(string)、value(string)、expiration(time.Time)三个字段。
 
+## 数据验证
+有时候我们需要对数据进行验证，数据不一定来自表单等。这时可以使用独立的数据验证组件来验证数据。
+#### 使用
+```
+type User struct {
+	Name string `validate:"required"`
+	Age int `validate:"gt=0"`
+}
 
+validate := a.GetI("validate").(*validator.Validate)
+err := validate.Struct(&User{
+    "",
+    0,
+})
+if err != nil {
+    for _, err := range err.(validator.ValidationErrors) {
+        fmt.Println(err)
+    }
+}
+```
+
+> 表单验证可以使用 gin.Context 的 ShouldBind 等系列方法
 
 待更。。。
 

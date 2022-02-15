@@ -11,6 +11,7 @@ import (
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/http"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/logger"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/redis"
+	"github.com/zhaoyang1214/ginco/framework/foundation/providers/validate"
 )
 
 func Run(a contract.Application) error {
@@ -29,15 +30,17 @@ func registerBaseProviders(a contract.Application) {
 	a.Bind("redis", &redis.Redis{})
 	a.Bind("database", &database.Database{})
 	a.Bind("cache", &cache.Cache{})
+	a.Bind("validate", &validate.Validate{})
 }
 
 func registerCoreAliases(a contract.Application) {
 	aliases := map[string]string{
-		"cmd":    "console",
-		"server": "http",
-		"router": "http",
-		"log":    "logger",
-		"db":     "database",
+		"cmd":       "console",
+		"server":    "http",
+		"router":    "http",
+		"log":       "logger",
+		"db":        "database",
+		"validator": "validate",
 	}
 	for k, v := range aliases {
 		a.Alias(v, k)
