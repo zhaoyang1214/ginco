@@ -10,3 +10,9 @@ type Logger interface {
 	Log(level interface{}, message string, context ...interface{})
 	Sync() error
 }
+
+type LoggerManager interface {
+	Logger
+	Channel(channel string) Logger
+	Driver(driver string) Logger
+}

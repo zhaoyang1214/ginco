@@ -16,7 +16,7 @@ type Manager struct {
 	channels map[string]contract.Logger
 }
 
-var _ contract.Logger = (*Manager)(nil)
+var _ contract.LoggerManager = (*Manager)(nil)
 
 func NewManager(app contract.Application) *Manager {
 	return &Manager{

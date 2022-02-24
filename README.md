@@ -3,7 +3,21 @@
 ## 介绍
 Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用。大部分服务基于契约，均可替换。
 
-##### 目前实现的服务：
+## 特性
+- 所有服务通过容器管理
+- 支持 <a href="">Gin Web 框架</a> （命令行启动、停止、重启）
+- 支持 JWT 认证, 基于 <a href="https://github.com/appleboy/gin-jwt">appleboy/gin-jwt/v2</a>
+- 支持配置管理，基于 <a href="https://github.com/spf13/viper">spf13/viper</a>
+- 支持命令行模式，基于 <a href="https://github.com/spf13/cobra">spf13/cobra</a>
+- 支持日志服务，基于 <a href="https://github.com/uber-go/zap">uber-go/zap</a>
+- 支持 Redis 服务，基于 <a href="https://github.com/go-redis/redis">go-redis/redis/v8</a>
+- 支持数据库服务，基于 <a href="https://github.com/go-gorm/gorm">go-gorm/gorm</a>
+- 支持缓存服务，基于 <a href="https://github.com/allegro/bigcache">allegro/bigcache</a>
+- 支持数据验证服务，基于 <a href="https://github.com/go-playground/validator">go-playground/validator/v10</a>
+- 支持 Swagger 文档，基于 <a href="https://github.com/swaggo/swag">swaggo/swag</a>
+- 支持数据库迁移，基于 <a href="https://github.com/go-gormigrate/gormigrate">go-gormigrate/gormigrate</a>
+
+##### 目前支持的服务：
 
 | 服务 | 别名 | 备注 |
 | --- | --- | --- |
@@ -209,6 +223,7 @@ router.Use(gin.Logger(), gin.Recovery())
 
 #### 使用
 ```
+// 使用默认日志通道
 log := a.GetI("log").(contract.Logger)
 defer log.Sync()
 
@@ -220,6 +235,10 @@ log.Log(zap.DPanicLevel, "test log")
 
 log.Error("test error", map[string]string{"t1":"111"})
 
+// 使用其他日志通道
+log := a.GetI("log").(contract.LoggerManager).Channel("stderr")
+defer log.Sync()
+// ...
 ```
 
 
@@ -417,6 +436,68 @@ if err != nil {
 ```
 
 > 表单验证可以使用 gin.Context 的 ShouldBind 等系列方法
+
+## 数据库迁移
+数据库迁移支持迁移和回滚。支持多数据库管理
+#### 简单使用
+在`database/migration`目录下创建要迁移的文件，参考`2022_02_22_140000_create_users_table.go`   
+然后运行命令（强烈建议加上`-k`参数，否则运行所有配置的数据库）
+```
+// 迁移 
+go run main.go migrate
+// or
+go run main.go migrate -k default
+
+// 回滚
+go run main.go migrate:rollback
+// or
+go run main.go migrate:rollback -k default
+```
+
+#### 配置其他数据库迁移
+1、打开`database/migration/migration.go`文件，添加
+```
+// 全局变量
+var mysql2Migrations []*gormigrate.Migration
+
+
+// Init函数中
+mysql2 := a.GetI("db").(contract.Database).Connection("mysql2")
+m["mysql2"] = gormigrate.New(mysql2, gormigrate.DefaultOptions, mysql2Migrations)
+```
+
+2、在`database/migration/`目录下创建要迁移的文件
+```
+func init() {
+	mysql2Migrations = append(mysql2Migrations, &gormigrate.Migration{
+		ID: "20220224141234",
+		Migrate: func(tx *gorm.DB) error {
+			return tx.AutoMigrate(&model.User{})
+		},
+		Rollback: func(tx *gorm.DB) error {
+			return tx.Migrator().DropTable("users")
+		},
+	})
+}
+```
+
+3、运行命令
+```
+// 迁移 
+go run main.go migrate -k mysql2
+
+// 回滚
+go run main.go migrate:rollback -k mysql2
+```
+
+#### 迁移到后回滚到指定的`migrationID`
+```
+// 迁移到20220222140000
+go run main.go migrate -k default -i 20220222140000
+
+// 回滚到20220222140000
+go run main.go migrate:rollback -k default -i 20220222140000
+```
 
 待更。。。
 

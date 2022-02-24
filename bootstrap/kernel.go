@@ -71,4 +71,6 @@ func registerBaseCommands(a contract.Application) {
 	cmd.AddCommand(commands.HttpCommand(a))
 	cmd.AddCommand(commands.HttpStopCommand(a))
 	cmd.AddCommand(commands.HttpRestartCommand(a))
+	cmd.AddCommand(commands.MigrateCommand(a))
+	cmd.AddCommand(commands.MigrateRollbackCommand(a))
 }
