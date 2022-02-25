@@ -490,7 +490,7 @@ go run main.go migrate -k mysql2
 go run main.go migrate:rollback -k mysql2
 ```
 
-#### 迁移到后回滚到指定的`migrationID`
+#### 迁移到或回滚到指定的`migrationID`
 ```
 // 迁移到20220222140000
 go run main.go migrate -k default -i 20220222140000
@@ -499,5 +499,5 @@ go run main.go migrate -k default -i 20220222140000
 go run main.go migrate:rollback -k default -i 20220222140000
 ```
 
-待更。。。
+
 
