@@ -5,7 +5,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 
 ## 特性
 - 所有服务通过容器管理
-- 支持 <a href="">Gin Web 框架</a> （命令行启动、停止、重启）
+- 支持 <a href="https://github.com/gin-gonic/gin">Gin Web 框架</a> （命令行启动、停止、重启）
 - 支持 JWT 认证, 基于 <a href="https://github.com/appleboy/gin-jwt">appleboy/gin-jwt/v2</a>
 - 支持配置管理，基于 <a href="https://github.com/spf13/viper">spf13/viper</a>
 - 支持命令行模式，基于 <a href="https://github.com/spf13/cobra">spf13/cobra</a>
