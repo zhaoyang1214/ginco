@@ -19,8 +19,10 @@ func Register(app contract.Application) {
 
 	r.Use(gin.Logger(), gin.Recovery())
 
-	r.GET("/", controller.Index)
-	r.GET("/name", controller.Name(app))
+	i := controller.NewIndex(app)
+
+	r.GET("/", i.Index)
+	r.GET("/name", i.Name)
 
 	authMiddleware := middleware.JWT(app)
 	r.POST("/login", authMiddleware.LoginHandler)
@@ -28,13 +30,13 @@ func Register(app contract.Application) {
 	auth := r.Group("/auth")
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/name", controller.Name(app))
+		auth.GET("/name", i.Name)
 	}
 
 	docs.SwaggerInfo_swagger.BasePath = "/example"
 	example := r.Group("/example")
 	{
-		example.GET("/helloworld", controller.Helloworld)
+		example.GET("/helloworld", i.Helloworld)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

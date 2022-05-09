@@ -35,7 +35,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/entity.JSONResult"
+                                    "$ref": "#/definitions/entity.ResultJSON"
                                 },
                                 {
                                     "type": "object",
@@ -59,7 +59,7 @@ const docTemplate_swagger = `{
         }
     },
     "definitions": {
-        "entity.JSONResult": {
+        "entity.ResultJSON": {
             "type": "object",
             "properties": {
                 "code": {

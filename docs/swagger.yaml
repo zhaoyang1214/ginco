@@ -1,5 +1,5 @@
 definitions:
-  entity.JSONResult:
+  entity.ResultJSON:
     properties:
       code:
         type: integer
@@ -22,7 +22,7 @@ paths:
           description: helloworld
           schema:
             allOf:
-            - $ref: '#/definitions/entity.JSONResult'
+            - $ref: '#/definitions/entity.ResultJSON'
             - properties:
                 code:
                   type: integer

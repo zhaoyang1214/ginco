@@ -23,7 +23,7 @@
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/entity.JSONResult"
+                                    "$ref": "#/definitions/entity.ResultJSON"
                                 },
                                 {
                                     "type": "object",
@@ -47,7 +47,7 @@
         }
     },
     "definitions": {
-        "entity.JSONResult": {
+        "entity.ResultJSON": {
             "type": "object",
             "properties": {
                 "code": {
