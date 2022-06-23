@@ -6,12 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Person struct {
-	Name    string `json:"name"`
-	Age     int    `json:"age"`
-	Married bool   `json:"married"`
-}
-
 func Command(a contract.Application) *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
