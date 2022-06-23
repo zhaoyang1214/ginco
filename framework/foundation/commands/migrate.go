@@ -2,10 +2,10 @@ package commands
 
 import (
 	"fmt"
+	"ginco/database/migration"
+	"ginco/framework/contract"
 	"github.com/go-gormigrate/gormigrate/v2"
 	"github.com/spf13/cobra"
-	"github.com/zhaoyang1214/ginco/database/migration"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"strings"
 )
 

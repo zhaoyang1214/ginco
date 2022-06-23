@@ -1,4 +1,4 @@
-module github.com/zhaoyang1214/ginco
+module ginco
 
 go 1.17
 

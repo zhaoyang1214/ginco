@@ -1,9 +1,9 @@
 package migration
 
 import (
+	"ginco/framework/contract"
+	"ginco/framework/database"
 	"github.com/go-gormigrate/gormigrate/v2"
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/database"
 )
 
 var migrations []*gormigrate.Migration

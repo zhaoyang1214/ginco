@@ -1,8 +1,8 @@
 package elasticsearch
 
 import (
+	"ginco/framework/contract"
 	"github.com/olivere/elastic/v7"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 type Client = elastic.Client

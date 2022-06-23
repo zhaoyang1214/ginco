@@ -1,8 +1,8 @@
 package migration
 
 import (
+	"ginco/app/model"
 	"github.com/go-gormigrate/gormigrate/v2"
-	"github.com/zhaoyang1214/ginco/app/model"
 	"gorm.io/gorm"
 )
 

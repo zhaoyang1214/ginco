@@ -1,8 +1,8 @@
 package foundation
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/container"
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/container"
+	"ginco/framework/contract"
 	"os"
 	"path"
 )

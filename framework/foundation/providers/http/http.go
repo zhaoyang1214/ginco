@@ -1,8 +1,8 @@
 package http
 
 import (
+	"ginco/framework/contract"
 	"github.com/gin-gonic/gin"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 type Http struct {

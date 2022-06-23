@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/contract"
 )
 
 var app contract.Application

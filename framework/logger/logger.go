@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/contract"
 	"go.uber.org/zap"
 	"strconv"
 )

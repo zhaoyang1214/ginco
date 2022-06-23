@@ -1,8 +1,8 @@
 package cache
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/cache"
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/cache"
+	"ginco/framework/contract"
 )
 
 type Cache struct {

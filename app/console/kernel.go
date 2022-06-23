@@ -1,9 +1,9 @@
 package console
 
 import (
+	"ginco/app/console/command/version"
+	"ginco/framework/contract"
 	"github.com/spf13/cobra"
-	"github.com/zhaoyang1214/ginco/app/console/command/version"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 func Register(a contract.Application) {

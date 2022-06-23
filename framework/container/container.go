@@ -2,7 +2,7 @@ package container
 
 import (
 	"errors"
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/contract"
 )
 
 type Container struct {

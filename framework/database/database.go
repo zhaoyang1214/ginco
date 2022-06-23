@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/contract"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

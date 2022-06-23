@@ -1,8 +1,8 @@
 package redis
 
 import (
+	"ginco/framework/contract"
 	"github.com/go-redis/redis/v8"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"time"
 )
 

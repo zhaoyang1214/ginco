@@ -2,8 +2,8 @@ package cache
 
 import (
 	"context"
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/redis"
+	"ginco/framework/contract"
+	"ginco/framework/redis"
 	"time"
 )
 

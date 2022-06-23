@@ -1,10 +1,10 @@
 package bootstrap
 
 import (
-	"github.com/zhaoyang1214/ginco/app/console"
-	"github.com/zhaoyang1214/ginco/app/providers"
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/foundation"
+	"ginco/app/console"
+	"ginco/app/providers"
+	"ginco/framework/contract"
+	"ginco/framework/foundation"
 	"os"
 )
 

@@ -3,7 +3,7 @@ package cache
 import (
 	"context"
 	"errors"
-	"github.com/zhaoyang1214/ginco/framework/contract"
+	"ginco/framework/contract"
 	"gorm.io/gorm"
 	"time"
 )

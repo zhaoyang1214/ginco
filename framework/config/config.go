@@ -1,8 +1,8 @@
 package config
 
 import (
+	"ginco/framework/contract"
 	"github.com/spf13/viper"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 type Config struct {

@@ -2,10 +2,10 @@ package config
 
 import (
 	"errors"
+	"ginco/framework/config"
+	"ginco/framework/contract"
+	"ginco/framework/util"
 	"github.com/spf13/viper"
-	"github.com/zhaoyang1214/ginco/framework/config"
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"

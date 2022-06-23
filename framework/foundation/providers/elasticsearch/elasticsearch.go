@@ -1,8 +1,8 @@
 package elasticsearch
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/elasticsearch"
+	"ginco/framework/contract"
+	"ginco/framework/elasticsearch"
 )
 
 type Elasticsearch struct {

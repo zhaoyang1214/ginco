@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/database"
+	"ginco/framework/contract"
+	"ginco/framework/database"
 )
 
 type Database struct {

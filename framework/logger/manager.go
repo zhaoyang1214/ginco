@@ -1,8 +1,8 @@
 package logger
 
 import (
+	"ginco/framework/contract"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"

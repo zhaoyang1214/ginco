@@ -1,13 +1,13 @@
 package router
 
 import (
+	"ginco/app/http/controller"
+	"ginco/app/http/middleware"
+	docs "ginco/docs"
+	"ginco/framework/contract"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/zhaoyang1214/ginco/app/http/controller"
-	"github.com/zhaoyang1214/ginco/app/http/middleware"
-	docs "github.com/zhaoyang1214/ginco/docs"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 func Register(app contract.Application) {

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"ginco/app/model"
+	"ginco/app/service"
+	"ginco/framework/contract"
 	"github.com/gin-gonic/gin"
-	"github.com/zhaoyang1214/ginco/app/model"
-	"github.com/zhaoyang1214/ginco/app/service"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"net/http"
 )
 

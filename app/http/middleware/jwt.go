@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"errors"
+	"ginco/app/entity"
+	"ginco/app/model"
+	"ginco/framework/contract"
+	"ginco/framework/database"
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/zhaoyang1214/ginco/app/entity"
-	"github.com/zhaoyang1214/ginco/app/model"
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/database"
 	"net/http"
 	"time"
 )

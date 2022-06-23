@@ -1,8 +1,8 @@
 package cache
 
 import (
+	"ginco/framework/contract"
 	"github.com/allegro/bigcache"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"time"
 )
 

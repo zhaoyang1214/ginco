@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/zhaoyang1214/ginco/bootstrap"
-	"github.com/zhaoyang1214/ginco/framework/foundation/app"
+	"ginco/bootstrap"
+	"ginco/framework/foundation/app"
 	"runtime/debug"
 )
 

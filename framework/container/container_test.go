@@ -2,8 +2,8 @@ package container
 
 import (
 	"errors"
+	"ginco/framework/contract"
 	"github.com/stretchr/testify/assert"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"testing"
 )
 

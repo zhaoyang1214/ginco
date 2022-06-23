@@ -1,8 +1,8 @@
 package command
 
 import (
+	"ginco/framework/contract"
 	"github.com/spf13/cobra"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 )
 
 type Command struct {

@@ -1,8 +1,8 @@
 package logger
 
 import (
-	"github.com/zhaoyang1214/ginco/framework/contract"
-	"github.com/zhaoyang1214/ginco/framework/logger"
+	"ginco/framework/contract"
+	"ginco/framework/logger"
 )
 
 type Logger struct {

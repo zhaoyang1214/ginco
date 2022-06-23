@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"ginco/app/entity"
+	"ginco/framework/contract"
 	"github.com/gin-gonic/gin"
-	"github.com/zhaoyang1214/ginco/app/entity"
-	"github.com/zhaoyang1214/ginco/framework/contract"
 	"net/http"
 )
 
