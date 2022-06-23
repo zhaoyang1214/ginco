@@ -16,6 +16,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 - 支持数据验证服务，基于 <a href="https://github.com/go-playground/validator">go-playground/validator/v10</a>
 - 支持 Swagger 文档，基于 <a href="https://github.com/swaggo/swag">swaggo/swag</a>
 - 支持数据库迁移，基于 <a href="https://github.com/go-gormigrate/gormigrate">go-gormigrate/gormigrate</a>
+- 支持Elasticsearch，基于<a href="https://github.com/olivere/elastic/">olivere/elastic/v7</a>
 
 ##### 目前支持的服务：
 
@@ -29,6 +30,7 @@ Ginco是一个Golang框架，基于gin框架和cobra CLI库实现，开箱即用
 | database | db | 数据库服务，基于contract.Database契约，底层使用gorm.DB |
 | cache | - | 缓存服务，基于contract.Cache契约，支持redis、memory、database三种驱动 |
 | validate | validator | 数据验证服务，使用validator.Validate |
+| elasticsearch | es | Elasticsearch服务，基于contract.Elasticsearch，底层使用elastic.Client |
 
 > 其他服务待实现，当然你也可以自己直接注册服务（Set），或者实现contract.Provider接口，然后绑定（Bind）即可
 
@@ -500,4 +502,47 @@ go run main.go migrate:rollback -k default -i 20220222140000
 ```
 
 
+## Elasticsearch服务
 
+Elasticsearch服务使用的时`olivere/elastic`库。它提供了完整的查询 DSL，可以完全抽象真实的查询。
+
+#### 简单使用：
+```
+type Person struct {
+	Name    string `json:"name"`
+	Age     int    `json:"age"`
+	Married bool   `json:"married"`
+}
+
+ctx := context.Background()
+es := a.GetI("es").(*elasticsearch.Elasticsearch)
+
+info, code, err := es.Ping("http://192.168.17.129:9200").Do(ctx)
+if err != nil {
+    panic(err)
+}
+fmt.Printf("Elasticsearch returned with code %d and version %s\n", code, info.Version.Number)
+
+p1 := Person{Name: "zhangsan", Age: 18, Married: false}
+if put1, err := es.Index().Index("user").BodyJson(p1).Do(ctx); err != nil {
+    panic(err)
+} else {
+    fmt.Printf("Indexed user %s to index %s, type %s\n", put1.Id, put1.Index, put1.Type)
+}
+
+query := elastic.NewMatchAllQuery()
+resp, err := es.Search().Index("user").Query(query).Do(ctx)
+if err != nil {
+    panic(err)
+}
+
+var person Person
+var persons []Person
+for _, item := range resp.Each(reflect.TypeOf(person)){
+    if t, ok := item.(Person); ok {
+        persons = append(persons, t)
+    }
+}
+
+fmt.Printf("persons:\n %+#v\n", persons)
+```

@@ -1,0 +1,9 @@
+elasticsearch:
+  default: es
+  connections:
+    es:
+      urls:
+        - ${ES_URL}
+      username:
+      password:
+      sniff: false

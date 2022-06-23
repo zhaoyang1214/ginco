@@ -8,6 +8,7 @@ import (
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/command"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/config"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/database"
+	"github.com/zhaoyang1214/ginco/framework/foundation/providers/elasticsearch"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/http"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/logger"
 	"github.com/zhaoyang1214/ginco/framework/foundation/providers/redis"
@@ -31,6 +32,7 @@ func registerBaseProviders(a contract.Application) {
 	a.Bind("database", &database.Database{})
 	a.Bind("cache", &cache.Cache{})
 	a.Bind("validate", &validate.Validate{})
+	a.Bind("elasticsearch", &elasticsearch.Elasticsearch{})
 }
 
 func registerCoreAliases(a contract.Application) {
@@ -41,6 +43,7 @@ func registerCoreAliases(a contract.Application) {
 		"log":       "logger",
 		"db":        "database",
 		"validator": "validate",
+		"es":        "elasticsearch",
 	}
 	for k, v := range aliases {
 		a.Alias(v, k)
